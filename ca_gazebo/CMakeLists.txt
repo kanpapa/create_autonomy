@@ -1,5 +1,3 @@
-#catkin_lint: ignore duplicate_cmd
-#catkin_lint: ignore uninstalled_export_lib
 cmake_minimum_required(VERSION 3.5.2)
 project(ca_gazebo)
 
@@ -24,14 +22,6 @@ find_package(catkin REQUIRED
     std_msgs
     tf
     tf2_ros
-)
-
-set(SERVICESIM_PLUGIN_LIST
-  AttachModelPlugin
-  CollisionActorPlugin
-  FollowActorPlugin
-  TrajectoryActorPlugin
-  VicinityPlugin
 )
 
 set(PLUGIN_LIST
@@ -69,38 +59,6 @@ include_directories(
 	${GAZEBO_INCLUDE_DIRS}
 )
 
-########################
-## ServiceSim plugins ##
-########################
-
-foreach(PLUGIN ${SERVICESIM_PLUGIN_LIST})
-  catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PLUGIN}
-    CATKIN_DEPENDS
-      ca_msgs
-      gazebo_plugins
-      message_generation
-      roscpp
-      std_msgs
-      tf
-      tf2_ros
-  )
-
-  add_library(${PLUGIN} SHARED src/servicesim/${PLUGIN}.cc)
-
-  add_dependencies(${PLUGIN} ${catkin_EXPORTED_TARGETS})
-
-  target_link_libraries(${PLUGIN}
-    ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
-
-  install(TARGETS ${PLUGIN}
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-  )
-endforeach()
-
 ###################################
 ###### iRobot Create plugins ######
 ###################################
@@ -121,14 +79,17 @@ catkin_package(
 )
 
 foreach(PLUGIN ${PLUGIN_LIST})
-  add_library(${PLUGIN} src/${PLUGIN}.cpp)
+  set(TARGET_NAME ${PROJECT_NAME}_${PLUGIN})
 
-  add_dependencies(${PLUGIN} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencpp)
+  add_library(${TARGET_NAME} src/${PLUGIN}.cpp)
 
-  target_link_libraries(${PLUGIN}
-    ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+  add_dependencies(${TARGET_NAME} ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
-  install(TARGETS ${TARGET}
+  target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+  set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${PLUGIN})
+
+  install(TARGETS ${TARGET_NAME}
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -141,9 +102,7 @@ endforeach()
 
 install(DIRECTORY
 			launch
-			media
-			models
-      test
+			test
 			worlds
 		DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
