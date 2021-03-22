@@ -25,8 +25,15 @@ install:
   # Install dependencies
   - sudo rosdep init
   - rosdep update
+  # Install ROS base
+  - sudo apt-get install -y ros-${CI_ROS_DISTRO}-ros-base
+  # Install jps3d
+  - sudo apt-get install -y libeigen3-dev libyaml-cpp-dev libboost-dev
+  - git clone https://github.com/KumarRobotics/jps3d.git /tmp/jps3d
+  - mkdir -p /tmp/jps3d/build && cd /tmp/jps3d/build && cmake .. && make -j$(nproc)
+  - sudo make install
+  - sudo ldconfig
   # Create workspace
-  #
   - mkdir -p $CREATE_AUTONOMY_SRC
   # Clone manual dependencies to $CATKIN_WS_SRC
   - wget -q https://raw.githubusercontent.com/${TRAVIS_REPO_SLUG}/${TRAVIS_COMMIT}/dependencies.repos
@@ -37,12 +44,12 @@ install:
   - cd $CATKIN_WS
   - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO
 
+# Build packages
+before_script:
+  - source /opt/ros/${CI_ROS_DISTRO}/setup.bash
+  - catkin_make -DCMAKE_BUILD_TYPE=Release -j$(nproc)
+
 script:
-  - source /opt/ros/$CI_ROS_DISTRO/setup.bash
-  - cd $CATKIN_WS
-  # Build packages
-  - catkin_make -DCMAKE_BUILD_TYPE=Release
-  # Run the tests, ensuring the path is set correctly.
   - source devel/setup.bash
   # Run tests
   # NOTE: GAZEBO TESTS FAIL IN PARALLEL
