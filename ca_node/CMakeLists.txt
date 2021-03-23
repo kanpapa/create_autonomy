@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   ecl_threads
   nodelet
   pluginlib
+  roscpp
 )
 
 find_package(Boost REQUIRED system thread)
@@ -15,16 +16,14 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   LIBRARIES ${PROJECT_NAME}let ca_driver
   CATKIN_DEPENDS
-    ca_description
-    ca_msgs
+    ca_driver
     ecl_threads
     geometry_msgs
     nodelet
     pluginlib
+    roscpp
     rospy
-    smach
     smach_ros
-    smach_viewer
     std_msgs
 )
 
@@ -42,10 +41,6 @@ install(FILES plugins/nodelet_plugins.xml
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/plugins)
 
 install(DIRECTORY scripts
-        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(DIRECTORY scripts
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         USE_SOURCE_PERMISSIONS
-        PATTERN ".svn" EXCLUDE
 )
