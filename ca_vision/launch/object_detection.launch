@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="ns"    default="create1"              doc="Namespace of the robot"/>
+  <arg name="laser" default="$(optenv LASER d435)" doc="Laser for mapping the environment"/>
+
+  <!-- <group ns="$(arg ns)">
+
+    <include file="$(find darknet_ros)/launch/darknet_ros.launch">
+      <arg name="network_param_file" value="$(find darknet_ros)/config/yolov2-tiny.yaml"/>
+      <arg name="image" value="$(arg laser)/rgb/image_rect_color" />
+    </include>
+
+  </group> -->
+
+
+  <!-- Config and weights folder. -->
+  <arg name="yolo_weights_path" default="$(find ca_vision)/weights"/>
+  <arg name="yolo_config_path"  default="$(find darknet_ros)/yolo_network_config/cfg"/>
+
+  <!-- ROS parameter files -->
+  <arg name="nodelet_manager_name" default="nodelet_manager"/>
+  <arg name="ros_param_file"       default="$(find darknet_ros)/config/ros.yaml"/>
+  <arg name="network_param_file"   default="$(find darknet_ros)/config/yolov2-tiny.yaml"/>
+
+  <!-- Load parameters -->
+  <rosparam command="load" ns="darknet_ros_nodelet" file="$(arg ros_param_file)"/>
+  <rosparam command="load" ns="darknet_ros_nodelet" file="$(arg network_param_file)"/>
+
+  <!-- Start darknet and ros wrapper -->
+  <node pkg="nodelet" type="nodelet" name="darknet_ros_nodelet"
+        output="screen" ns="$(arg ns)"
+        args="load darknet_ros/DarknetRosNodelet $(arg nodelet_manager_name)">
+    <param name="weights_path" value="$(arg yolo_weights_path)" />
+    <param name="config_path"  value="$(arg yolo_config_path)" />
+    <param name="subscribers/camera_reading/topic" value="$(arg laser)/rgb/image_rect_color"/>
+  </node>
+</launch>
