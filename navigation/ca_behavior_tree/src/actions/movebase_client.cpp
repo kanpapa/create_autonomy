@@ -27,8 +27,8 @@ BT::NodeStatus MoveBase::tick()
   }
 
   // Take the goal from the InputPort of the Node
-  Pose2D goal;
-  if (!getInput<Pose2D>("goal", goal))
+  BT::Pose2D goal;
+  if (!getInput<BT::Pose2D>("goal", goal))
   {
     // if I can't get this, there is something wrong with your BT.
     // For this reason throw an exception instead of returning FAILURE
@@ -40,7 +40,7 @@ BT::NodeStatus MoveBase::tick()
 
   ROS_INFO("Sending goal %f %f", goal.x, goal.y);
 
-  // Build the message from Pose2D
+  // Build the message from BT::Pose2D
   move_base_msgs::MoveBaseGoal msg;
   msg.target_pose.header.frame_id = "map";
   msg.target_pose.header.stamp = ros::Time::now();

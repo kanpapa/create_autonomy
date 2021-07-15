@@ -5,6 +5,7 @@ Author:     Diego Maldonado (@dmnunez1993)
 Maintainer: Emiliano Borghi (@eborghi10)
 """
 
+import getpass
 import os
 import subprocess
 from subprocess import PIPE
@@ -36,7 +37,7 @@ def get_uid():
     return os.getuid()
 
 def get_user():
-    return os.getlogin()
+    return getpass.getuser()
 
 def create_directory(directory):
     # Check existance before creating the directory

@@ -17,8 +17,10 @@
 // ROS
 #include <ros/ros.h>
 
+#include "ca_behavior_tree/actions/get_location.h"
 #include "ca_behavior_tree/actions/movebase_client.h"
 #include "ca_behavior_tree/conditions/is_battery_level_ok.h"
+#include "ca_behavior_tree/conditions/mate_was_returned.h"
 
 
 int main(int argc, char **argv)
@@ -36,8 +38,10 @@ int main(int argc, char **argv)
   // We use the BehaviorTreeFactory to register our custom nodes
   BT::BehaviorTreeFactory factory;
 
+  factory.registerNodeType<GetLocation>("GetLocation");
   factory.registerNodeType<MoveBase>("MoveBase");
   factory.registerNodeType<IsBatteryLevelOK>("IsBatteryLevelOK");
+  factory.registerNodeType<MateWasReturned>("MateWasReturned");
 
   // Trees are created at deployment-time (i.e. at run-time, but only once at
   // the beginning). The currently supported format is XML. IMPORTANT: when the
