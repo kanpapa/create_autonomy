@@ -30,7 +30,7 @@ RUN rm -r ${IMU_SCRIPT}
 # Install the latest Intel® RealSense™ SDK 2.0
 RUN curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF6E65AC044F831AC80A06380C8B3A55A6F3EFCDE' | sudo apt-key add -
 RUN add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -sc) main" -u
-RUN apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev
+RUN apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev rsync
 
 # Install jps3d (Jump Point Search)
 # Note: This is a library that is compiled with "make"
