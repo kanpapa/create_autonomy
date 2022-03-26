@@ -17,7 +17,7 @@
 
   <!-- move_base -->
   <include if="$(eval arg('navigation')=='move_base')"
-           file="$(find ca_move_base)/launch/move_base.launch">
+           file="$(find ca_move_base)/launch/move_base_create1.launch">
     <arg name="ns"    value="$(arg ns)"/>
     <arg name="laser" value="$(arg laser)"/>
   </include>
