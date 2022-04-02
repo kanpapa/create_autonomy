@@ -43,7 +43,7 @@
 
 	<!-- AMCL -->
   <include if="$(eval arg('localization')=='amcl')"
-           file="$(find ca_move_base)/launch/amcl.launch">
+           file="$(find ca_move_base)/launch/amcl_create1.launch">
     <arg name="ns"    value="$(arg ns)"/>
     <arg name="laser" value="$(arg laser)"/>
   </include>
