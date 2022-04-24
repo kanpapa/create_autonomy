@@ -2,7 +2,7 @@
   <arg name="ns"    default="create1"                 doc="Namespace of the robot"/>
   <arg name="laser" default="$(optenv LASER rplidar)" doc="Laser for mapping the environment"/>
 
-  <arg name="localization" default="" doc="Autonomous method for localization/navigation."/>
+  <arg name="localization" default="$(optenv LOCALIZATION amcl)" doc="Autonomous method for localization/navigation."/>
   <arg name="navigation"   value="$(optenv NAVIGATION move_base)" doc="Navigation framework to use"/>
   <arg name="env"          default="empty"/>
 
@@ -58,7 +58,7 @@
 
   <!-- LAMA -->
   <include if="$(eval arg('localization')=='lama')"
-           file="$(find ca_move_base)/launch/lama.launch">
+           file="$(find ca_move_base)/launch/lama_create1.launch">
     <arg name="ns"    value="$(arg ns)"/>
     <arg name="laser" value="$(arg laser)"/>
   </include>
